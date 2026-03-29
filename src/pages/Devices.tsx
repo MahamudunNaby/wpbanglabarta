@@ -8,8 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Smartphone, Plus, QrCode, Trash2 } from "lucide-react";
+import { Smartphone, Plus, Trash2, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { QRCodeSVG } from "qrcode.react";
 import type { Tables } from "@/integrations/supabase/types";
 
 export default function Devices() {
@@ -54,11 +55,19 @@ export default function Devices() {
             <DialogContent>
               <DialogHeader><DialogTitle>নতুন ডিভাইস যুক্ত করুন</DialogTitle></DialogHeader>
               <div className="space-y-4">
-                <div className="flex items-center justify-center rounded-lg border-2 border-dashed border-border p-8">
-                  <div className="text-center">
-                    <QrCode className="mx-auto h-24 w-24 text-muted-foreground" />
-                    <p className="mt-2 text-sm text-muted-foreground">QR কোড স্ক্যান করুন</p>
-                  </div>
+                <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border p-6 bg-muted/30">
+                  <QRCodeSVG
+                    value={`wa-link://${user?.id?.slice(0, 8) ?? "demo"}-${Date.now()}`}
+                    size={200}
+                    level="M"
+                    bgColor="transparent"
+                    fgColor="hsl(145, 63%, 25%)"
+                  />
+                  <p className="mt-3 text-sm font-medium">WhatsApp ওপেন করে QR স্ক্যান করুন</p>
+                  <p className="text-xs text-muted-foreground mt-1">Linked Devices → Link a Device</p>
+                  <Button variant="ghost" size="sm" className="mt-2" onClick={() => setOpen(true)}>
+                    <RefreshCw className="mr-1 h-3 w-3" />রিফ্রেশ করুন
+                  </Button>
                 </div>
                 <div className="space-y-2">
                   <Label>ডিভাইসের নাম</Label>
