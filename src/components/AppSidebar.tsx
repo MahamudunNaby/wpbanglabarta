@@ -8,6 +8,7 @@ import {
   Settings,
   LogOut,
   MessageCircle,
+  ShieldCheck,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -33,6 +34,7 @@ const menuItems = [
   { title: "অটো-রিপ্লাই", url: "/auto-reply", icon: MessageSquareReply },
   { title: "অ্যাফিলিয়েট প্যানেল", url: "/affiliate", icon: UserPlus },
   { title: "সেটিংস", url: "/settings", icon: Settings },
+  { title: "অ্যাডমিন প্যানেল", url: "/admin", icon: ShieldCheck },
 ];
 
 export function AppSidebar() {

@@ -12,6 +12,7 @@ import Campaigns from "./pages/Campaigns";
 import AutoReply from "./pages/AutoReply";
 import Affiliate from "./pages/Affiliate";
 import SettingsPage from "./pages/SettingsPage";
+import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/auto-reply" element={<ProtectedRoute><AutoReply /></ProtectedRoute>} />
             <Route path="/affiliate" element={<ProtectedRoute><Affiliate /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
