@@ -48,6 +48,7 @@ const App = () => (
             <Route path="/auto-reply" element={<ProtectedRoute><AutoReply /></ProtectedRoute>} />
             <Route path="/affiliate" element={<ProtectedRoute><Affiliate /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
