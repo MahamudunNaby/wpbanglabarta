@@ -13,7 +13,18 @@ import { useToast } from "@/hooks/use-toast";
 import { QRCodeSVG } from "qrcode.react";
 import type { Tables } from "@/integrations/supabase/types";
 
-const WA_SERVER_URL = "http://wa.udvabonlabs.com";
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+
+async function waProxy(path: string, method = "GET", body?: unknown) {
+  const url = `${SUPABASE_URL}/functions/v1/wa-proxy?path=${encodeURIComponent(path)}`;
+  const res = await fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  });
+  if (!res.ok) throw new Error("Proxy error");
+  return res.json();
+}
 
 type QrStatus = "loading" | "qr" | "connected" | "error";
 
@@ -25,7 +36,6 @@ export default function Devices() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 
-  // Real WhatsApp QR state
   const [qrData, setQrData] = useState<string | null>(null);
   const [qrStatus, setQrStatus] = useState<QrStatus>("loading");
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -38,20 +48,16 @@ export default function Devices() {
 
   useEffect(() => { fetchDevices(); }, [user]);
 
-  // Poll QR from VPS server when dialog is open
   const startPolling = useCallback(() => {
     if (pollRef.current) clearInterval(pollRef.current);
 
     const fetchQr = async () => {
       try {
-        const res = await fetch(`${WA_SERVER_URL}/api/qr`);
-        if (!res.ok) throw new Error("Server error");
-        const data = await res.json();
+        const data = await waProxy("/api/qr");
 
         if (data.status === "connected") {
           setQrStatus("connected");
           setQrData(null);
-          // Stop polling once connected
           if (pollRef.current) clearInterval(pollRef.current);
         } else if (data.status === "qr" && data.qr) {
           setQrStatus("qr");
@@ -103,13 +109,11 @@ export default function Devices() {
     fetchDevices();
   };
 
-  // Check live server status for each device
   const [serverConnected, setServerConnected] = useState(false);
   useEffect(() => {
     const check = async () => {
       try {
-        const res = await fetch(`${WA_SERVER_URL}/api/status`);
-        const data = await res.json();
+        const data = await waProxy("/api/status");
         setServerConnected(data.connected === true);
       } catch {
         setServerConnected(false);
