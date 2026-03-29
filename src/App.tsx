@@ -12,6 +12,7 @@ import Campaigns from "./pages/Campaigns";
 import AutoReply from "./pages/AutoReply";
 import Affiliate from "./pages/Affiliate";
 import SettingsPage from "./pages/SettingsPage";
+import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
