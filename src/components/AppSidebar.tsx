@@ -34,6 +34,9 @@ const menuItems = [
   { title: "অটো-রিপ্লাই", url: "/auto-reply", icon: MessageSquareReply },
   { title: "অ্যাফিলিয়েট প্যানেল", url: "/affiliate", icon: UserPlus },
   { title: "সেটিংস", url: "/settings", icon: Settings },
+];
+
+const adminItems = [
   { title: "অ্যাডমিন প্যানেল", url: "/admin", icon: ShieldCheck },
 ];
 
@@ -41,7 +44,9 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
-  const { signOut } = useAuth();
+  const { signOut, isAdmin } = useAuth();
+
+  const visibleItems = isAdmin ? [...menuItems, ...adminItems] : menuItems;
 
   return (
     <Sidebar collapsible="icon">
@@ -63,7 +68,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
+              {visibleItems.map((item) => (
                 <SidebarMenuItem key={item.url}>
                   <SidebarMenuButton asChild>
                     <NavLink
