@@ -14,7 +14,206 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      auto_replies: {
+        Row: {
+          ai_prompt: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          keyword: string
+          reply_message: string | null
+          updated_at: string
+          use_ai: boolean | null
+          user_id: string
+        }
+        Insert: {
+          ai_prompt?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          keyword: string
+          reply_message?: string | null
+          updated_at?: string
+          use_ai?: boolean | null
+          user_id: string
+        }
+        Update: {
+          ai_prompt?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          keyword?: string
+          reply_message?: string | null
+          updated_at?: string
+          use_ai?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      campaigns: {
+        Row: {
+          batch_limit: number | null
+          created_at: string
+          delay_seconds: number | null
+          id: string
+          message_body: string
+          name: string
+          scheduled_at: string | null
+          status: string
+          target_tags: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          batch_limit?: number | null
+          created_at?: string
+          delay_seconds?: number | null
+          id?: string
+          message_body: string
+          name: string
+          scheduled_at?: string | null
+          status?: string
+          target_tags?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          batch_limit?: number | null
+          created_at?: string
+          delay_seconds?: number | null
+          id?: string
+          message_body?: string
+          name?: string
+          scheduled_at?: string | null
+          status?: string
+          target_tags?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          phone_number: string
+          tags: string[] | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          phone_number: string
+          tags?: string[] | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          phone_number?: string
+          tags?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      devices: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          phone_number: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          phone_number?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          phone_number?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      message_logs: {
+        Row: {
+          campaign_id: string | null
+          created_at: string
+          id: string
+          phone_number: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          phone_number: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string
+          id?: string
+          phone_number?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_logs_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          ai_global_prompt: string | null
+          business_name: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_global_prompt?: string | null
+          business_name?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_global_prompt?: string | null
+          business_name?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
