@@ -21,10 +21,10 @@ serve(async (req) => {
       );
     }
 
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
-    if (!GEMINI_API_KEY) {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
       return new Response(
-        JSON.stringify({ error: "GEMINI_API_KEY কনফিগার করা হয়নি" }),
+        JSON.stringify({ error: "LOVABLE_API_KEY কনফিগার করা হয়নি" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -34,30 +34,35 @@ ${global_context ? `ব্যবসার তথ্য: ${global_context}` : ""}
 ${ai_prompt ? `বিশেষ নির্দেশনা: ${ai_prompt}` : ""}
 গ্রাহকের মেসেজের উত্তর দিন। উত্তর সংক্ষিপ্ত, বিনয়ী এবং সহায়ক হতে হবে। শুধু রিপ্লাই টেক্সট দিন, অন্য কিছু না।`;
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: systemPrompt }] },
-          contents: [{ role: "user", parts: [{ text: message }] }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 500,
-          },
-        }),
-      }
-    );
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: message },
+        ],
+      }),
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Gemini API error:", response.status, errorText);
+      console.error("AI Gateway error:", response.status, errorText);
 
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: "রেট লিমিট অতিক্রম করেছে, কিছুক্ষণ পরে আবার চেষ্টা করুন।" }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (response.status === 402) {
+        return new Response(
+          JSON.stringify({ error: "ক্রেডিট শেষ হয়ে গেছে, দয়া করে ক্রেডিট যোগ করুন।" }),
+          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       return new Response(
@@ -68,7 +73,7 @@ ${ai_prompt ? `বিশেষ নির্দেশনা: ${ai_prompt}` : ""}
 
     const data = await response.json();
     const reply =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      data.choices?.[0]?.message?.content ||
       "দুঃখিত, উত্তর তৈরি করা সম্ভব হয়নি।";
 
     return new Response(
